@@ -1,6 +1,6 @@
 /* mergesort.cpp 
 **
-** Merge-sort library. Stable, always run at O(N*log(N))
+** Merge-sort library. Stable, always run at N*log(N)
 **
 ** return the sorted seaquence and the number of inversions found in the original seaquence
 **
@@ -16,7 +16,7 @@
 #include <cmath>
 #include <iostream>
 
-long long recur_mergesort(std::vector<int>& vArray) // return the number of inversions in the original array
+long long recur_mergesort(std::vector<int>& vArray) 
 {
 	if (vArray.size() == 1)
 		return 0;
