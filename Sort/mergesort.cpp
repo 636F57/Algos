@@ -16,6 +16,7 @@
 #include <cmath>
 #include <iostream>
 
+// vArray is an array of integer vertices of [0,1,2,...,vArray.size()-1].
 long long recur_mergesort(std::vector<int>& vArray) 
 {
 	if (vArray.size() == 1)
@@ -67,7 +68,7 @@ int main()
 	
 	std::cout << "Enter the length of the integer sequence." << std::endl;
 	std::cin >> strN;
-	int lTotal = std::stoll(strN);
+	long long lTotal = std::stoll(strN);
 	
 	std::cout << "Enter the integer seaquence separating each numbers with a space." << std::endl;
 	
