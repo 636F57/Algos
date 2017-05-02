@@ -6,7 +6,7 @@
 ** Native: build the distance table by trival method. works fine in any case but slow.
 ** Dijkstra: build the distance table by Dijkstra algorithm. Faster. 
 **
-** Both functions take AdacencyMatrix as input. Edges are not weighted.
+** Both functions take AdacencyMatrix as input. Edges are not weighted. Good for densed graph.
 ** 
 ** Note that all vertices number starts from 0 (inclusive), to match with the index numbers of arrays.
 **
@@ -32,7 +32,7 @@ std::vector<long long> Native(std::vector<std::vector<int>>& vAdjacencyMatrix, i
 	int nVertexNum = vAdjacencyMatrix.size();
 	std::vector<long long> vDistance(nVertexNum, MAX_DISTANCE+1);  // distance from nStartVertex
 	vDistance[nStartVertex] = 0;
-	int cnt;
+	int i,j, cnt;
 	bool bChanged = true;
 	
 	while (bChanged)
@@ -48,7 +48,7 @@ std::vector<long long> Native(std::vector<std::vector<int>>& vAdjacencyMatrix, i
 					{
 						vDistance[j] = vDistance[i] + vAdjacencyMatrix[i][j];
 						bChanged = true;
-d					}
+					}
 				}
 			}
 		}
@@ -66,7 +66,7 @@ std::vector<long long> Dijkstra(std::vector<std::vector<int>>& vAdjacencyMatrix,
 	
 	std::vector<char> vVertexStatus(nVertexNum, 0);  // 0:unchecked, 1:in queue, 2:done
 	vVertexStatus[nStartVertex] = 1;
-	int cnt = 1, nCurrentVertex;
+	int i, j, cnt = 1, nCurrentVertex;
 	long long lShortest;
 	
 	while (cnt > 0)
@@ -109,3 +109,7 @@ std::vector<long long> Dijkstra(std::vector<std::vector<int>>& vAdjacencyMatrix,
 	return vDistance;
 }
 
+int main()  // have not write a test program...
+{
+	return 0;
+}

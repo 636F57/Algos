@@ -1,6 +1,6 @@
 /* ShortestPathFast.cpp
 **
-** Faster version of ShortestPath.cpp.
+** Faster version of ShortestPath.cpp. (May not necessary true for densed graph as this is taking AdacencyList as input)
 **
 ** contains functions that returns a list of distances between the corresponding vertex and the source vertex.
 ** You can easily find the vertex which has shortest distance form the source vertex looking up this distance table.
@@ -26,6 +26,8 @@
 #include <cstdlib> 
 #include <vector>
 #include <queue>
+#include <list>
+#include <algorithm>
 #include <iostream>
 
 
@@ -118,7 +120,7 @@ public:
 
 // build distance table by Dijkstra algorithm from AdjacencyList.
 // use binary heap (std::priority_queue) for queuing vertices.
-std::vector<long long> DijkstraBinaryHeap(std::vector<std::vector<edgeU>>& vAdjacencyList, int nStartVertex)
+std::vector<unsigned int> DijkstraBinaryHeap(std::vector<std::vector<edgeU>>& vAdjacencyList, int nStartVertex)
 {
 	int nVertexNum = vAdjacencyList.size();
 	std::vector<unsigned int> vDistance(nVertexNum, MAX_DISTANCE2+1);  // distance from nStartVertex
@@ -127,7 +129,7 @@ std::vector<long long> DijkstraBinaryHeap(std::vector<std::vector<edgeU>>& vAdja
 	vVertexStatus[nStartVertex] = 1;
 	std::priority_queue<vertex, std::vector<vertex>, comp> Queue((comp()));
 	Queue.push({nStartVertex,0});
-	int nCurrentVertex, nDestVertex;
+	int i, j, nCurrentVertex, nDestVertex;
 	
 	while (Queue.size() > 0)
 	{
@@ -161,3 +163,7 @@ std::vector<long long> DijkstraBinaryHeap(std::vector<std::vector<edgeU>>& vAdja
 	return vDistance;
 }
 
+int main()  // have not write a test program...
+{
+	return 0;
+}
