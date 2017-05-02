@@ -5,7 +5,6 @@
 ** IsConnectedGraph: returns whether the graph is a connected graph or not
 ** HasCycle: returns whether the entire graph includes at least one cycle or not
 ** getCycles: returns a list of cycles contained in the entire graph
-** getDistances: returns a list of distances between the corresponding vertex and the source vertex
 ** 
 ** Note that all vertices number starts from 0 (inclusive), to match with the index numbers of arrays.
 **
@@ -28,7 +27,7 @@ class DepthFirstSearch
 {
 private:
 	// return a list of vertex indexes which are connected to the one indicated by nStartVertex
-	static std::vector<int> recur_connectedVertexesByDFS(std::vector<std::vector<int>> vAdjascencyList, int nStartVertex,
+	static std::vector<int> recur_connectedverticesByDFS(std::vector<std::vector<int>> vAdjacencyList, int nStartVertex,
 															std::vector<int> *pvConnectedVertex = 0)
 	{
 		std::vector<int> vConnectedVertex, vTmp;
@@ -43,9 +42,9 @@ private:
 		int i,j, nVertex;
 		bool bFound;
 		
-		for (i=0; i<vAdjascencyList[nStartVertex].size(); i++)
+		for (i=0; i<vAdjacencyList[nStartVertex].size(); i++)
 		{
-			nVertex = vAdjascencyList[nStartVertex][i];
+			nVertex = vAdjacencyList[nStartVertex][i];
 			// check if the vertex is already in the list
 			bFound = false;
 			for (j=0; j<pvConnectedVertex->size(); j++)
@@ -59,7 +58,7 @@ private:
 			// if havent checked then check it by recursive call
 			if (!bFound)
 			{
-				vTmp = recur_connectedVertexesByDFS(vAdjascencyList, nVertex, pvConnectedVertex);
+				vTmp = recur_connectedverticesByDFS(vAdjacencyList, nVertex, pvConnectedVertex);
 				pvConnectedVertex->insert(vConnectedVertex.end(), vTmp.begin(), vTmp.end());
 			}
 		}
@@ -67,15 +66,15 @@ private:
 	}
 
 	// return if the connected part (which includes nStartVertex) of the graph contains at least one cycle
-	static bool recur_hasCycleByDFS(std::vector<std::vector<int>> vAdjascencyList, int nStartVertex, std::vector<int> *pvVertexStatus)
+	static bool recur_hasCycleByDFS(std::vector<std::vector<int>> vAdjacencyList, int nStartVertex, std::vector<int> *pvVertexStatus)
 	{
 		(*pvVertexStatus)[nStartVertex] = 1;
 
 		int i,j, nVertex, nStatus; 
 		
-		for (i=0; i<vAdjascencyList[nStartVertex].size(); i++)
+		for (i=0; i<vAdjacencyList[nStartVertex].size(); i++)
 		{
-			nVertex = vAdjascencyList[nStartVertex][i];
+			nVertex = vAdjacencyList[nStartVertex][i];
 			
 			// check if the vertex is already visited
 			nStatus = (*pvVertexStatus)[nVertex];
@@ -85,7 +84,7 @@ private:
 				continue;
 			else
 			{
-				if ( recur_hasCycleByDFS(vAdjascencyList, nVertex, pvVertexStatus) )
+				if ( recur_hasCycleByDFS(vAdjacencyList, nVertex, pvVertexStatus) )
 					return true;
 			}
 		}
@@ -94,7 +93,7 @@ private:
 	}
 
 	// return a list of cycles contained in the connected part (which includes nStartVertex) of the graph
-	static std::vector<std::vector<int>> recur_getCyclesByDFS(std::vector<std::vector<int>> vAdjascencyList, int nStartVertex, 
+	static std::vector<std::vector<int>> recur_getCyclesByDFS(std::vector<std::vector<int>> vAdjacencyList, int nStartVertex, 
 																std::vector<int> *pvVertexStatus, std::vector<int> *pvChecking = 0)
 	{
 		(*pvVertexStatus)[nStartVertex] = 1;
@@ -112,9 +111,9 @@ private:
 		std::vector<int>::iterator iter;
 		int i,j, nVertex, nStatus;
 		
-		for (i=0; i<vAdjascencyList[nStartVertex].size(); i++)
+		for (i=0; i<vAdjacencyList[nStartVertex].size(); i++)
 		{
-			nVertex = vAdjascencyList[nStartVertex][i];
+			nVertex = vAdjacencyList[nStartVertex][i];
 		
 			// check if the vertex is already visited
 			nStatus = (*pvVertexStatus)[nVertex];
@@ -134,7 +133,7 @@ private:
 				continue;
 			else
 			{
-				vCycleListTmp = recur_getCyclesByDFS(vAdjascencyList, nVertex, pvVertexStatus, pvChecking);
+				vCycleListTmp = recur_getCyclesByDFS(vAdjacencyList, nVertex, pvVertexStatus, pvChecking);
 				vCycleList.insert(vCycleList.end(), vCycleListTmp.begin(), vCycleListTmp.end());
 			}
 		}
@@ -147,34 +146,34 @@ public:
 	~DepthFirstSearch(){}
 	
 	// return true if the graph is a connected graph
-	static bool IsConnectedGraph(std::vector<std::vector<int>> vAdjascencyList)
+	static bool IsConnectedGraph(std::vector<std::vector<int>> vAdjacencyList)
 	{
-		std::vector<int> vConnectedVertex = recur_connectedVertexesByDFS(vAdjascencyList, 0);
+		std::vector<int> vConnectedVertex = recur_connectedverticesByDFS(vAdjacencyList, 0);
 		
-		if ( vAdjascencyList.size() > vConnectedVertex.size() )
+		if ( vAdjacencyList.size() > vConnectedVertex.size() )
 			return false;
-		else if ( vAdjascencyList.size() == vConnectedVertex.size() )
+		else if ( vAdjacencyList.size() == vConnectedVertex.size() )
 			return true;
 		else
-			return false;  // actually should throw error. (invalid vAdjascencyList)
+			return false;  // actually should throw error. (invalid vAdjacencyList)
 	}
 
 	// return true if the entire graph includes at least one cycle
-	static bool HasCycle(std::vector<std::vector<int>> vAdjascencyList)
+	static bool HasCycle(std::vector<std::vector<int>> vAdjacencyList)
 	{
 		//status: 0=not visited, 1=under checking (namely, ancestor of current vertex), 2=all checked (namely, dead end).
-		std::vector<int> vVertexStatus(vAdjascencyList.size(), 0);
+		std::vector<int> vVertexStatus(vAdjacencyList.size(), 0);
 		
 		int i, index = 0;
 		bool bFound = true;
 		while(bFound)
 		{
-			if (recur_hasCycleByDFS(vAdjascencyList, index, &vVertexStatus) == true)
+			if (recur_hasCycleByDFS(vAdjacencyList, index, &vVertexStatus) == true)
 				return true;
 				
-			// if there are non-visited vertexes, need to check them too.
+			// if there are non-visited vertices, need to check them too.
 			bFound = false;
-			for (i=index; i<vAdjascencyList.size(); i++)
+			for (i=index; i<vAdjacencyList.size(); i++)
 			{
 				if (vVertexStatus[i] == 0)
 				{
@@ -188,22 +187,22 @@ public:
 	}
 	
 	// return a list of cycles contained in the entire graph
-	static std::vector<std::vector<int>> getCycles(std::vector<std::vector<int>> vAdjascencyList)
+	static std::vector<std::vector<int>> getCycles(std::vector<std::vector<int>> vAdjacencyList)
 	{
 		//status: 0=not visited, 1=under checking (namely, ancestor of current vertex), 2=all checked (namely, dead end).
-		std::vector<int> vVertexStatus(vAdjascencyList.size(), 0);
+		std::vector<int> vVertexStatus(vAdjacencyList.size(), 0);
 		
 		std::vector<std::vector<int>> vCycleList, vCycleListTmp;
 		int i, index = 0;
 		bool bFound = true;
 		while(bFound)
 		{
-			vCycleListTmp = recur_getCyclesByDFS(vAdjascencyList, index, &vVertexStatus);
+			vCycleListTmp = recur_getCyclesByDFS(vAdjacencyList, index, &vVertexStatus);
 			vCycleList.insert(vCycleList.end(), vCycleListTmp.begin(), vCycleListTmp.end());
 				
-			// if there are non-visited vertexes, need to check them too.
+			// if there are non-visited vertices, need to check them too.
 			bFound = false;
-			for (i=index; i<vAdjascencyList.size(); i++)
+			for (i=index; i<vAdjacencyList.size(); i++)
 			{
 				if (vVertexStatus[i] == 0)
 				{
@@ -216,66 +215,6 @@ public:
 		return vCycleList;
 	}
 	
-	/** for weighted graph **/
-	struct edge
-	{
-		int dest;
-		int weight;
-	};
-	
-	const long long MAX_DISTANCE = 1000000000000001;  // use this as initial value in the getDistances function. (change as needed)
-
-	// return a list of distances between the corresponding vertex and the source vertex
-	// vertex number is 0-based (starts from 0).
-	// nMaxWeight is the maximum possible weight for a edge
-	// good only when nMaxWeight is small otherwise it takes too long time and too much memory
-	std::vector<long long> getDistances(std::vector<std::vector<edge>> &vAdjacencyList, int nMaxWeight, int nOriginVertex)
-	{
-		std::vector<std::list<int>> vCheckList(nMaxWeight+1);
-		std::vector<long long> vDistance(vAdjacencyList.size(), MAX_DISTANCE);
-		std::list<int>::iterator iter;
-		long long lDistance = 0;
-		
-		vDistance[nOriginVertex] = 0;
-		vCheckList[0].push_back(nOriginVertex);
-		int nCheckCnt = 1, nVertexSrc, nVertexDest, i,j;
-		int nWeightTmp;
-		
-		while (nCheckCnt > 0)
-		{
-			while ( vCheckList[lDistance % (nMaxWeight+1)].size() == 0)
-			{
-				lDistance++;
-			}
-			nWeightTmp = lDistance % (nMaxWeight + 1);
-			nVertexSrc = vCheckList[nWeightTmp].front();
-			vCheckList[nWeightTmp].pop_front();
-			nCheckCnt--;
-			
-			for (i=0; i<vAdjacencyList[nVertexSrc].size(); i++)
-			{
-				nVertexDest = vAdjacencyList[nVertexSrc][i].dest;
-				
-				// if current path is shorter, move the vertex from the old distance queue to new distance queue
-				if (vDistance[nVertexDest] > lDistance + vAdjacencyList[nVertexSrc][i].weight)
-				{
-					if (vDistance[nVertexDest] < MAX_DISTANCE)
-					{
-						nWeightTmp = vDistance[nVertexDest] % (nMaxWeight+1);
-						iter = std::find(vCheckList[nWeightTmp].begin(), vCheckList[nWeightTmp].end(), nVertexDest);
-						vCheckList[nWeightTmp].erase(iter);
-						nCheckCnt--;
-					}
-					
-					vDistance[nVertexDest] = lDistance + vAdjacencyList[nVertexSrc][i].weight;
-					vCheckList[vDistance[nVertexDest] % (nMaxWeight+1)].push_back(nVertexDest);
-					nCheckCnt++;
-				}
-			}
-		}
-		return vDistance;
-	}
-
 };
 
 
@@ -292,33 +231,33 @@ int main()   // sample program
 	std::cin >> strN;
 	int nEdgeNum = std::stoi(strN);
 	
-	std::vector<std::vector<int>> vAdjascencyList(nVertexNum), vCycleList;
+	std::vector<std::vector<int>> vAdjacencyList(nVertexNum), vCycleList;
 	int i, j, vertex_from, vertex_to;
 	// generate random adjascency list (multiple edges could be generated with same source/target) 
 	for (i=0; i<nEdgeNum; i++)
 	{
 		vertex_from = rand() % nVertexNum;
 		vertex_to = rand() % nVertexNum;
-		vAdjascencyList[vertex_from].push_back(vertex_to);
+		vAdjacencyList[vertex_from].push_back(vertex_to);
 	}
 	
 	std::cout << "A graph is randomly generated. The AdjasencyList is :\n";
 	for (i=0; i<nVertexNum; i++)
 	{
-		for (j=0; j<vAdjascencyList[i].size(); j++)
-			std::cout << std::to_string(j) << " -> " << std::to_string(vAdjascencyList[i][j]) << "\n";
+		for (j=0; j<vAdjacencyList[i].size(); j++)
+			std::cout << std::to_string(j) << " -> " << std::to_string(vAdjacencyList[i][j]) << "\n";
 	}
 	
 	std::cout << "\nThis graph:\n";
-	if (DepthFirstSearch::IsConnectedGraph(vAdjascencyList))
+	if (DepthFirstSearch::IsConnectedGraph(vAdjacencyList))
 		std::cout << "is connected\n";
 	else
 		std::cout << "is NOT connected\n";
 	
-	if (DepthFirstSearch::HasCycle(vAdjascencyList))
+	if (DepthFirstSearch::HasCycle(vAdjacencyList))
 	{
 		std::cout << "has cycles. And the cycles are:\n";
-		vCycleList = DepthFirstSearch::getCycles(vAdjascencyList);
+		vCycleList = DepthFirstSearch::getCycles(vAdjacencyList);
 		for (i=0; i<vCycleList.size(); i++)
 		{
 			std::cout << std::to_string(vCycleList[i][0]);
