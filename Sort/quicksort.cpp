@@ -3,7 +3,7 @@
 ** Quick-sort library. unstable.
 ** can switch the pivot number between the middle of the array or a randomly choosed number of the interested array.
 ** Note: with random pivot (default), it runs always at N*log(N),
-** with middle pivot, it runs mostly at N*log(N) but in the rare case of best at N, the worst at N*N
+** with middle pivot, it runs mostly (including the best) at N*log(N), but in the worst at N*N
 **
 ** as an additional information, this returns the number of how many comparison needed to sort the sequence.
 **
@@ -18,7 +18,6 @@
 */
 
 #include <cstdlib> 
-#include <fstream>
 #include <cmath>
 #include <vector>
 #include <iostream>
