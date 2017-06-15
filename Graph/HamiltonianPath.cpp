@@ -5,8 +5,6 @@
 ** 
 ** Note that all vertices number starts from 0 (inclusive), to match with the index numbers of arrays.
 **
-** worked find in original projects but not tested after extracted to here. (I must check...)
-**
 ** All compiled and tested with g++ 6.2.0 MinGW-W64
 **
 ** MIT License 
