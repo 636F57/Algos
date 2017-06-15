@@ -1,6 +1,6 @@
 /* HamiltonianPath.cpp
 **
-** finds Hamiltonian Path if exists. returns as a list of vertices, which indicates the path from source to the final destination.
+** finds Hamiltonian Path if it exists. returns as a list of vertices, which indicates the path from source to the final destination.
 ** takes AdjacencyMatrix as input.
 ** 
 ** Note that all vertices number starts from 0 (inclusive), to match with the index numbers of arrays.
@@ -24,9 +24,9 @@ class HamiltonianPath
 private:
 	struct pathstatus
 	{
-		int end_vertex;          // current vertex
-		std::vector<int> vUsed;  // array to store the previous vertex of when visited, otherwise -1.
-		int usedcnt;             // number of used vertecies
+		int end_vertex;          	// current vertex
+		std::vector<int> vVisited;  // array to store the previous vertex of the time when it is visited, otherwise -1.
+		int visitedcnt;             // number of visited vertecies
 	};
 
 public:
@@ -39,13 +39,13 @@ public:
 		
 		std::vector<std::vector<int>> vHamiltonianPathList;
 		std::vector<int> vTmpHamiltonianPath(nVertexNum);
-		std::vector<int> vUsed(nVertexNum, -1);	
+		std::vector<int> vVisited(nVertexNum, -1);	
 		
-		vUsed[nStartVertex] = -2;       // previous vertex not available as starting vertex
+		vVisited[nStartVertex] = -2;       // previous vertex not available as starting vertex
 		pathstatus tmpstatus, currentstatus;
 		tmpstatus.end_vertex = nStartVertex;
-		tmpstatus.usedcnt = 1;
-		tmpstatus.vUsed.assign(vUsed.begin(),vUsed.end());
+		tmpstatus.visitedcnt = 1;
+		tmpstatus.vVisited.assign(vVisited.begin(),vVisited.end());
 		std::deque<pathstatus> dqTmpPath({tmpstatus});
 		
 		int i, j, nCurrentVertex;
@@ -56,51 +56,102 @@ public:
 			dqTmpPath.pop_front();
 			nCurrentVertex = currentstatus.end_vertex;
 			
-			if (currentstatus.usedcnt == nVertexNum)  // Hamiltonian path found.
+			if (currentstatus.visitedcnt == nVertexNum)  // Hamiltonian path found.
 			{
 				vTmpHamiltonianPath[nVertexNum-1] = nCurrentVertex;
 				for (i=nVertexNum-2; i>=0; i--)
 				{
-					vTmpHamiltonianPath[i] = currentstatus.vUsed[vTmpHamiltonianPath[i+1]];
+					vTmpHamiltonianPath[i] = currentstatus.vVisited[vTmpHamiltonianPath[i+1]];
 				}
 				vHamiltonianPathList.push_back(vTmpHamiltonianPath);
 				continue;
 			}
 			
-			// go to the next vertex which is not used yet
+			// go to the next vertex which is not visited yet
 			for (i=0; i<nVertexNum; i++)
 			{
 				if (vAdjacencyMatrix[nCurrentVertex][i] == false)
 					continue;
 					
-				if (currentstatus.vUsed[i] != -1)
+				if (currentstatus.vVisited[i] != -1)
 					continue;
 					
 				tmpstatus.end_vertex = i;
-				tmpstatus.usedcnt = currentstatus.usedcnt + 1;
-				tmpstatus.vUsed.assign(currentstatus.vUsed.begin(), currentstatus.vUsed.end());
-				tmpstatus.vUsed[i] = nCurrentVertex;
+				tmpstatus.visitedcnt = currentstatus.visitedcnt + 1;
+				tmpstatus.vVisited.assign(currentstatus.vVisited.begin(), currentstatus.vVisited.end());
+				tmpstatus.vVisited[i] = nCurrentVertex;
 				dqTmpPath.push_back(tmpstatus);
 			}
 		}
 		
 		return vHamiltonianPathList;
 	}
+	
+	static std::vector<std::vector<int>> getHamiltonianCycle(std::vector<std::vector<bool>>& vAdjacencyMatrix, int nStartVertex)
+	{
+		std::vector<std::vector<int>> vHamiltonianCycleList;
+		std::vector<std::vector<int>> vHamiltonianPathList = getHamiltonianPath(vAdjacencyMatrix, 0);
+		
+		for (int i=0; i<vHamiltonianPathList.size(); i++)
+		{
+			if (vAdjacencyMatrix[nStartVertex][vHamiltonianPathList[i].back()] == true)
+			{
+				vHamiltonianPathList[i].push_back(nStartVertex);
+				vHamiltonianCycleList.push_back(vHamiltonianPathList[i]);
+			}
+		}
+		
+		return vHamiltonianCycleList;
+	}
 };
 
-int main()   // sample vAdjacencyMatrix is not yet implemented...
+int main()   
 {	
-	std::vector<std::vector<bool>> vAdjacencyMatrix;  
+	/* sample graph
+	    /| \ 
+	   / |  \  
+	  / / \  \
+	 / /    \  \
+	/ /      \  \
+    ---       ---
+	\ \      /  /
+     \ \    /  /
+      \  --   /
+	   \/	\/ 
+		-----
+	*/
+	std::vector<std::vector<bool>> vAdjacencyMatrix(10);  
+	vAdjacencyMatrix[0] = {0,1,0,0,1,1,0,0,0,0};        
+	vAdjacencyMatrix[1] = {1,0,1,0,0,0,1,0,0,0};
+	vAdjacencyMatrix[2] = {0,1,0,1,0,0,0,1,0,0};
+	vAdjacencyMatrix[3] = {0,0,1,0,1,0,0,0,1,0};
+	vAdjacencyMatrix[4] = {1,0,0,1,0,0,0,0,0,1};
+	vAdjacencyMatrix[5] = {1,0,0,0,0,0,1,0,0,1};
+	vAdjacencyMatrix[6] = {0,1,0,0,0,1,0,1,0,0};
+	vAdjacencyMatrix[7] = {0,0,1,0,0,0,1,0,1,0};
+	vAdjacencyMatrix[8] = {0,0,0,1,0,0,0,1,0,1};
+	vAdjacencyMatrix[9] = {0,0,0,0,1,1,0,0,1,0};
 	
-	std::vector<std::vector<int>> vHamiltonianPathList  = HamiltonianPath::getHamiltonianPath(vAdjacencyMatrix, 0);
 	
-		
+	std::vector<std::vector<int>> vHamiltonianPathList = HamiltonianPath::getHamiltonianPath(vAdjacencyMatrix, 0);
+	
+	std::cout << "Number of Hamiltonian paths : " << std::to_string(vHamiltonianPathList.size()) << "\n";	
 	for (int k=0; k<vHamiltonianPathList.size(); k++)
 	{
 		for (int j=0; j<vHamiltonianPathList[k].size() - 1; j++)
 			std::cout << std::to_string(vHamiltonianPathList[k][j]) + " -> ";
 
 		std::cout << std::to_string(vHamiltonianPathList[k].back()) + "\n";
+	}
+	
+	std::vector<std::vector<int>> vHamiltonianCycleList = HamiltonianPath::getHamiltonianCycle(vAdjacencyMatrix, 0 );
+	std::cout << "\nNumber of Hamiltonian cycles : " << std::to_string(vHamiltonianCycleList.size()) << "\n";
+	for (int k=0; k<vHamiltonianCycleList.size(); k++)
+	{
+		for (int j=0; j<vHamiltonianCycleList[k].size() - 1; j++)
+			std::cout << std::to_string(vHamiltonianCycleList[k][j]) + " -> ";
+
+		std::cout << std::to_string(vHamiltonianCycleList[k].back()) + "\n";
 	}
 	
 	return 0;
