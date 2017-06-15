@@ -1,11 +1,10 @@
 /* EulerianPath.cpp
 **
 ** finds Eulerian Path if exists. returns as a list of vertices, which indicates the path from source to the final destination.
-**
+** This does not list up all Eulerian paths. Only return one of them even if multiple exists.
 ** 
 ** Note that all vertices number starts from 0 (inclusive), to match with the index numbers of arrays.
 **
-** worked find in original projects but not tested after extracted to here. (I must check...)
 **
 ** All compiled and tested with g++ 6.2.0 MinGW-W64
 **
@@ -23,18 +22,18 @@ class EulerianPath
 public:
 	struct edge
 	{
-		int dest;
-		int edgeindex;
-		bool used = false;
+		int dest;			// mandatory entry
+		int edgeinfo = 0;	// just for optional info about edge. remain intact in EulerianPath finder functions.
+		bool used = false;	// this will change after passsed in to EulerianPath finder functions.
 	};
 	
 private:
 	// pEdge is internal use for recuring process of this function.
-	static bool recur_findEulerianPath(std::vector<std::vector<edge>>& vAdjacencyList, std::vector<edge>* pvEulearianPath, bool bDirected = false, edge* pEdge = 0)
+	static bool recur_findEulerianPath(std::vector<std::vector<edge>>& vAdjacencyList, std::vector<edge>* pvEulerianPath, bool bDirected = false, edge* pEdge = 0)
 	{
 		int i,j, nStartVertex;
 		
-		if (pEdge == 0)
+		if (pEdge == 0) // first time call
 			nStartVertex = -1;
 		else
 			nStartVertex = pEdge->dest;
@@ -102,7 +101,7 @@ private:
 					nStartVertex = 0;		
 			}
 		}
-		
+
 		edge tmpitem;
 
 		for (i=0; i<vAdjacencyList[nStartVertex].size(); i++)
@@ -121,12 +120,12 @@ private:
 						vAdjacencyList[tmpitem.dest][j].used = true;
 				}
 			}
-			recur_findEulerianPath(vAdjacencyList, pvEulearianPath, bDirected, &tmpitem);
+			recur_findEulerianPath(vAdjacencyList, pvEulerianPath, bDirected, &tmpitem);
 		}
-		if (pEdge == 0)
-			pvEulearianPath->push_back({nStartVertex, -1, true});
+		if (pEdge == 0)  // now returned to the first vertex
+			pvEulerianPath->push_back({nStartVertex, -1, true});  
 		else
-			pvEulearianPath->push_back(*pEdge);
+			pvEulerianPath->push_back(*pEdge);
 		return true;
 	}
 
@@ -135,21 +134,50 @@ public:
 	~EulerianPath(){}
 	
 	// assume the entire graph is connected.
-	// return false when no Eulerian path exits. pvEulearianPath is the pointer to a vector array to store the resulting path.
+	// return false when no Eulerian path exits. pvEulerianPath is the pointer to a vector array to store the resulting path.
 	// bDirected is the flag whether the graph is directed or not. default is false.
-	static bool findEulerianPath(std::vector<std::vector<edge>>& vAdjacencyList, std::vector<edge>* pvEulearianPath, bool bDirected = false)
+	static bool findEulerianPath(std::vector<std::vector<edge>>& vAdjacencyList, std::vector<edge>* pvEulerianPath, bool bDirected = false)
 	{
-		return recur_findEulerianPath(vAdjacencyList, pvEulearianPath, bDirected, 0);
+		return recur_findEulerianPath(vAdjacencyList, pvEulerianPath, bDirected, 0);
 	}
 };
 
-int main()  // sample program needs to be complete...
+int main() 
 {	
-	std::vector<std::vector<EulerianPath::edge>> vAdjacencyList;
-	/*-- create vAdjacencyList  here --*/
+	/* sample graph
+	                      /\
+	                     /  \
+	-------------------------
+	|                   |
+	|                   |
+	--------------------
+	*/
 	
-	std::vector<EulerianPath::edge> vEulearianPath; // this is for result
-	bool bRes = EulerianPath::findEulerianPath(vAdjacencyList, &vEulearianPath);
+	std::vector<std::vector<EulerianPath::edge>> vAdjacencyList(6);
+	vAdjacencyList[0] = {{1},{3}};
+	vAdjacencyList[1] = {{0},{2}};
+	vAdjacencyList[2] = {{1},{3}};
+	vAdjacencyList[3] = {{0},{2},{4},{5}};
+	vAdjacencyList[4] = {{3},{5}};
+	vAdjacencyList[5] = {{3},{4}};
+		
+	std::vector<EulerianPath::edge> vEulerianPath; // this is for result
+
+	bool bRes = EulerianPath::findEulerianPath(vAdjacencyList, &vEulerianPath);
+	
+	if (bRes)
+	{
+		std::cout << "Eulerian path found.\n";
+		for (int k=0; k<vEulerianPath.size()-1; k++)
+		{
+			std::cout << std::to_string(vEulerianPath[k].dest) +  " -> ";
+		}
+		std::cout << std::to_string(vEulerianPath.back().dest) + "\n";
+	}
+	else
+	{
+		std::cout << "EulerianPath not found.\n";
+	}
 	
 	return 0;
 }
