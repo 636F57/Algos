@@ -117,8 +117,8 @@ int main()
 	\ \      /  /
 	 \ \    /  /
 	  \  --   /
-	  \/	\/ 
-	   -----
+	   \/   \/ 
+	    -----
 	*/
 	std::vector<std::vector<bool>> vAdjacencyMatrix(10);  
 	vAdjacencyMatrix[0] = {0,1,0,0,1,1,0,0,0,0};        
