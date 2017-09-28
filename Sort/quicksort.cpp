@@ -43,10 +43,12 @@ private:
 		if (bRandom)
 		{
 			nPivot = vArray[nStartIndex + floor(rand()*(nEndindex-nStartIndex+1.0)/(RAND_MAX+1.0))];
+//std::cout << std::to_string(nPivot) << ",";  // for debug
 		}
 		else
 		{	
 			nPivot = vArray[ceil((nStartIndex+nEndindex)/2.0)];
+//std::cout << std::to_string(nPivot) << "_";  // for debug
 		}
 		
 		do
@@ -67,9 +69,9 @@ private:
 		} while(i<=j);
 		
 		if (nStartIndex < j)
-			lCompareCnt += recur_Qsort(vArray, nStartIndex, j);
+			lCompareCnt += recur_Qsort(vArray, nStartIndex, j, bRandom);
 		if (i < nEndindex)
-			lCompareCnt += recur_Qsort(vArray, i, nEndindex);
+			lCompareCnt += recur_Qsort(vArray, i, nEndindex, bRandom);
 
 		return lCompareCnt;
 	}
@@ -189,7 +191,14 @@ int main()
 		std::vector<int> vArray1, vArray2 = QsortCls::genWorstPermutation(250);
 		vArray1 = vArray2;
 		
-		long long lCntM = QsortCls::Qsort_Middle(vArray1);
+	/*	std::cout << "The worst case seaquence : \n";   // for debug
+		for (long long i=0; i<10; i++)
+		{
+			std::cout << std::to_string(vArray1[i]) << " ";
+		}
+		std::cout << "\n";
+	*/	
+		long long lCntM = QsortCls::Qsort_Middle(vArray1); //std::cout << "\n";
 		long long lCntR = QsortCls::Qsort(vArray2);
 		
 		std::cout << "The number of comparison needed to sort the seaquence : \n Middle-pivot = " << std::to_string(lCntM) << ", Random-pivot = " << std::to_string(lCntR) << ".\n";
