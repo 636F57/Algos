@@ -127,35 +127,80 @@ public:
 	{
 		return recur_Qsort_K(vArray, 0, vArray.size()-1, nK1, nK2);
 	}
+	
+	// Produce the worst case permutation for the middle pivot quicksort
+	static std::vector<int> genWorstPermutation(int N)
+	{
+		std::vector<int> vArray({1});
+		if (N==1)
+			return vArray;
+			
+		vArray.push_back(2);		
+		int nPivotIndex;
+		for (int i=3; i<=N; i++)
+		{
+			nPivotIndex = ceil((i-1)/2.0);
+			vArray.push_back(vArray[nPivotIndex]);
+			vArray[nPivotIndex] = i;  // set the pivot value the maximum
+		}
+		
+		return vArray;
+	}
+
 };
 
 int main()
 {
 	std::string strN;
 	
-	std::cout << "Enter the length of the integer sequence." << std::endl;
+	std::cout << "1: Input the sequence to sort. \n2: No input and show the demonstration. \nChoose 1 or 2: " << std::endl;
 	std::cin >> strN;
-	long long lTotal = std::stoll(strN);
-	
-	std::cout << "Enter the integer seaquence separating each numbers with a space." << std::endl;
-	
-	std::vector<int> vArray;
-	for (long long i=0; i<lTotal; i++)
+	int nMenu = std::stoi(strN);
+	if (nMenu == 1)
 	{
+		std::cout << "\nEnter the length of the integer sequence." << std::endl;
 		std::cin >> strN;
-		vArray.push_back(std::stoi(strN));
+		long long lTotal = std::stoll(strN);
+		
+		std::cout << "Enter the integer seaquence separating each numbers with a space." << std::endl;
+		
+		std::vector<int> vArray;
+		for (long long i=0; i<lTotal; i++)
+		{
+			std::cin >> strN;
+			vArray.push_back(std::stoi(strN));
+		}
+		
+		long long lCnt = QsortCls::Qsort(vArray);
+		
+		std::cout << "\nThe number of comparison needed to sort the seaquence : " << std::to_string(lCnt) << "\n";
+		
+		std::cout << "The sorted seaquence : \n";
+		for (long long i=0; i<lTotal; i++)
+		{
+			std::cout << std::to_string(vArray[i]) << " ";
+		}
+		std::cout << "\n";
 	}
-	
-	long long lCnt = QsortCls::Qsort(vArray);
-	
-	std::cout << "The number of comparison needed to sort the seaquence : " << std::to_string(lCnt) << "\n";
-	
-	std::cout << "The sorted seaquence : \n";
-	for (long long i=0; i<lTotal; i++)
+	else
 	{
-		std::cout << std::to_string(vArray[i]) << " ";
+		std::cout << "\nDemonstration of sorting a sequence of 250 integers, which works as the worst case for middle-pivoted quicksort.\n";
+		
+		std::vector<int> vArray1, vArray2 = QsortCls::genWorstPermutation(250);
+		vArray1 = vArray2;
+		
+		long long lCntM = QsortCls::Qsort_Middle(vArray1);
+		long long lCntR = QsortCls::Qsort(vArray2);
+		
+		std::cout << "The number of comparison needed to sort the seaquence : \n Middle-pivot = " << std::to_string(lCntM) << ", Random-pivot = " << std::to_string(lCntR) << ".\n";
+		
+		std::cout << "\nDemonstration of sorting a sorted seaquence.\n";
+		
+		lCntM = QsortCls::Qsort_Middle(vArray1);
+		lCntR = QsortCls::Qsort(vArray2);
+		
+		std::cout << "The number of comparison needed to sort the seaquence : \n Middle-pivot = " << std::to_string(lCntM) << ", Random-pivot = " << std::to_string(lCntR) << ".\n";
 	}
-	std::cout << "\n";
 	
 	return 0;
 }
