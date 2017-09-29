@@ -1,3 +1,16 @@
+/* HighlyCompositeNumber.cpp 
+**
+** Returns a list of Highly Composite Numbers in a form of vector of custom structure, stHCNumber.
+**
+** NOTE: Highly Composite Number is a positive integer with more divisors than any smaller positive integer has.
+** (cited from https://en.wikipedia.org/wiki/Highly_composite_number)
+**
+** All compiled and tested with g++ 6.2.0 MinGW-W64
+**
+** MIT License 
+** Copyright (c) 2017 636F57@GitHub 
+** See more detail at https://github.com/636F57/Algos/blob/master/LICENSE 
+*/
 
 #include <cstdlib> 
 #include <cmath>
